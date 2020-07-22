@@ -1,4 +1,4 @@
-Baremetal firmare code pushed here was written by me back in 2014. <br />
+Baremetal firmare code pushed here was written by me back in 2014.  <br />
 <br/>
 The sensor is not in the existence, so this code is pushed for the reference. <br />
 <br />

@@ -24,7 +24,7 @@ TCE1_OVF_vect							ISR for TIMER-CE1 overflow (Voltage Stabilization Timer)
 TCF1_OVF_vect							ISR for TIMER-CF1 overflow (System Delay Timer)
 
 
-Author: Aalok Shah, 
+Author: Aalok Shah 
 
 Naming Conventions:
 ALL CAPS =          MACRO, DEFINE

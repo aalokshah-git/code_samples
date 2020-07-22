@@ -15,7 +15,7 @@ Interrupts:
 RTC_OVF_vect				Interrupts periodically at sample_clock/8 value and enables the system timing task
 
 
-Author: , Aalok Shah
+Author: Aalok Shah
 
 Naming Conventions:
 ALL CAPS =          MACRO, DEFINE

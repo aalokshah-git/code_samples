@@ -6,7 +6,7 @@ Date Created: 10/27/2014
 
 (NOTE: latest version is the top version)
 
-Author: , Aalok Shah
+Author: Aalok Shah
 Changes: Initial version
 
 Naming Conventions:

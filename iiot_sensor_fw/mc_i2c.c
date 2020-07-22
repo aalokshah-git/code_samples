@@ -16,7 +16,7 @@ Interrupt :
 TWIF_TWIM_vect						Manage I2C Master related communications in various software defined operation modes
 
 
-Author: , Aalok Shah
+Author: Aalok Shah
 
 Naming Conventions:
 ALL CAPS =          MACRO, DEFINE

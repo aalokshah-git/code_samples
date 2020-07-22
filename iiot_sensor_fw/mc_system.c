@@ -21,7 +21,7 @@ Interrupts:
 -NA-
 
 
-Author: , Aalok Shah
+Author: Aalok Shah
 
 Naming Conventions:
 ALL CAPS =          MACRO, DEFINE

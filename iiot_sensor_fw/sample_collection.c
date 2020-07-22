@@ -12,7 +12,7 @@ fnData_Collection_Task					This task performs operations to prepare the data pac
 fnResetFirmwareResourceAllocations		Reset all the resources shared in middle and lower level design
 
 
-Author: , Aalok Shah
+Author: Aalok Shah
 
 Naming Conventions:
 ALL CAPS =          MACRO, DEFINE
