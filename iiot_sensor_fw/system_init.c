@@ -8,7 +8,7 @@ Purpose: Initialization of SENSOR MC firmware as well as hardware
 
 Functions:
 fnSystemInitTask				Responsible for the initialization of hardware as well as firmware
-fnDefaultTaskingTableInit		Initialize default taking table
+fnDefaultExecutionTableInit		Initialize default taking table
 fnResetSource					Detect Reset source at power on
 fnHardwareInit					Initialize SENSOR MC hardware at start up
 fnSoftwareInit					Initialize SENSOR MC firmware at start up
@@ -75,7 +75,7 @@ Test Results:
 //Flag to indicate the occurrence of new interrupt (It is used to avoid missing interrupt while putting controller to sleep mode)
 volatile uint8_t	gchNewInterrupt;
 
-//To indicate the task manager to go in to deep sleep mode (Will get set when receiving "OFF" from Sidewall Serial Interface)						
+//To indicate the task manager to go in to deep sleep mode (Will get set when receiving "OFF" from Debug Serial Interface)						
 volatile uint8_t	gchControllerOff;
 
 //Every bit of this variable mapped with a task which maintain its enable/disable state
@@ -203,7 +203,7 @@ inline void fnSoftwareInit(void)
 //
 // @brief	This is the main initialization task. It is responsible for initializing the SENSOR MMC firmware and hardware for operations.
 //			It initializes the hardware by calling fnHardwareInit() function.
-//			It initializes the firmware by calling fnSoftwareInit() and fnDefaultTaskingTableInit() functions.
+//			It initializes the firmware by calling fnSoftwareInit() and fnDefaultExecutionTableInit() functions.
 
 void fnSystemInitTask(void)
 {
@@ -217,39 +217,39 @@ void fnSystemInitTask(void)
 	fnSoftwareInit();
 	
 	//It will initialize the default tasking table at application start up
-	fnDefaultTaskingTableInit();
+	fnDefaultExecutionTableInit();
 	
 	SEND_DEBUG_STRING("Initialization Successful - Starting Task Manager...\n\n");
 	fnWait_uSecond(100000);	//100ms occasional delay
 	return;
 }
 
-//____fnDefaultTaskingTableInit _________________________________________________________________
+//____fnDefaultExecutionTableInit _________________________________________________________________
 //
 // @brief	This function can be considered as a part of Firmware Initialization function
-//			It initializes the default Tasking Table with which SENSOR MC has to operate
+//			It initializes the default Execution Table with which SENSOR MC has to operate
 //			Following settings are considered for default tasking table:
 //				Sample Clock: 1HZ
 //				Radio Clock Divisor: 5
 //				Comm Wait tTime: 500mz
 //				Active Tasks: TT Request Task
-//				No Sensor Tasking Table is available at startup			
+//				No Sensor Execution Table is available at startup			
 
-void fnDefaultTaskingTableInit(void)
+void fnDefaultExecutionTableInit(void)
 {
-	gchTasks_Enable |=  TASKING_TABLE_REQ_TASK;
+	gchTasks_Enable |=  EXECUTION_TABLE_REQ_TASK;
 	gchTasks_Enable &=  ~(DATA_SAMPLING_TASK | DATA_COLLECTION_TASK | DATA_DOWNLOAD_TASK);
 	gchTasks_Active =	DISABLE_ALL_TASKS;
 	
 	fnStopSampleClock();
 		
 	//Holds default value of communication wait time in case of no response
-	gnDefaultCommWaitTimeValue=DEFAULT_TT_COMM_WAIT_TIME;				
-	ghMasterTaskTable.nCommTimeout=DEFAULT_TT_COMM_WAIT_TIME;
+	gnDefaultCommWaitTimeValue=DEFAULT_ET_COMM_WAIT_TIME;				
+	ghMasterTaskTable.nCommTimeout=DEFAULT_ET_COMM_WAIT_TIME;
 	
-	ghMasterTaskTable.nRadioClockDivisor=DEFAULT_TT_RADIO_CLOCK;
+	ghMasterTaskTable.nRadioClockDivisor=DEFAULT_ET_RADIO_CLOCK;
 	ghMasterTaskTable.chDataDownloadChannel=RADIO_CH_SLOW_DOWNLINK_CC1125;
-	fnConfigureSampleClock(DEFAULT_TT_SAMPLE_CLOCK);
+	fnConfigureSampleClock(DEFAULT_ET_SAMPLE_CLOCK);
 	return;
 }
 

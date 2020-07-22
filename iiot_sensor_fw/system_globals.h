@@ -77,9 +77,9 @@ Test Results:
 	//Packet Header IDs: Instrumented Top Drive Sub
 	//Contents of Byte 0x00 of Packet Header for RFC Transmissions
 	#define MASTER_CONTROLLER_STATUS_PACKET		0x80
-	#define REQUEST_NEW_TASKING_TABLE			0x81
-	#define ACK_RECEIPT_OF_LAST_TT_PACKET		0x82
-	#define NACK_RECEIPT_OF_LAST_TT_PACKET		0X83
+	#define REQUEST_NEW_EXECUTION_TABLE			0x81
+	#define ACK_RECEIPT_OF_LAST_ET_PACKET		0x82
+	#define NACK_RECEIPT_OF_LAST_ET_PACKET		0X83
 	#define SLOW_DL_DATA_PACKET					0X84
 	#define FAST_DL_DATA_PACKET					0X85
 	#define DATA_MESSAGE_TERMINATED				0X86
@@ -91,9 +91,9 @@ Test Results:
 	//Packet Header IDs: Rig Floor Console
 	#define SENSOR_HARD_RESET_COMMAND_1			0x01
 	#define REQUEST_SENSOR_STATUS					0x02
-	#define NO_NEW_TT_AVAILABLE					0x03
-	#define NEW_TASKING_TABLE_PACKET			0x04
-	#define TASKING_TABLE_UPLOAD_TERMINATED		0x05
+	#define NO_NEW_ET_AVAILABLE					0x03
+	#define NEW_EXECUTION_TABLE_PACKET			0x04
+	#define EXECUTION_TABLE_UPLOAD_TERMINATED		0x05
 	#define TERMINATE_DATA_DOWNLOAD				0x06
 	#define ACK_RECEIPT_LAST_DATA_PACKET		0x07
 	#define NACK_INVALID_PACKET					0x08
@@ -113,8 +113,8 @@ Test Results:
 	#define DATA_SAMPLING_TASK					(1<<0)		//bit location for data sampling task
 	#define DATA_COLLECTION_TASK				(1<<1)		//bit location for data collection task
 	#define DATA_DOWNLOAD_TASK					(1<<2)		//bit location for data download task
-	#define TASKING_TABLE_REQ_TASK				(1<<3)		//bit location for TT request task
-	#define	SIDEWALL_SERIAL_TASK				(1<<4)		//bit location for side wall serial task
+	#define EXECUTION_TABLE_REQ_TASK				(1<<3)		//bit location for TT request task
+	#define	DEBUG_SERIAL_TASK				(1<<4)		//bit location for side wall serial task
 	#define	WATCHDOG_MANAGEMENT_TASK			(1<<5)		//bit location for watch dog management task
 
 	//SENSOR-RF Communication Packet Indexes
@@ -125,7 +125,7 @@ Test Results:
 	#define PACKET_ERROR_CONTROL_INDEX			4
 	#define PACKET_DOWNLOAD_DATA_SIZE			5
 	#define PACKET_DATA_MESSAGE_INDEX			6
-	#define PACKET_FIRST_SENSOR_TT_INDEX		12
+	#define PACKET_FIRST_SENSOR_ET_INDEX		12
 	#define PACKET_LAST_DATA_BYTE_INDEX			128			//Maximum no of data can be stored in one packet
 
 	//5V Power Control

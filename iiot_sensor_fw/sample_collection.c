@@ -118,7 +118,7 @@ int8_t fnData_Sampling_Task(void)
 				ghSensorControl[chSensorCounter].chSampleClockCounter = RESET_COUNTER;
 				chCheckFlag = SET_FLAG;
 				
-				//If sampling in already running than ignore its next sampling (Mismatch in TaskingTable design)
+				//If sampling in already running than ignore its next sampling (Mismatch in ExecutionTable design)
 				if(ghSensorControl[chSensorCounter].chSensorStatusFlag==SAMPLE_STATE_OFF)
 				{
 					if(ghSensorControl[chSensorCounter].chSensorSampleAvgCounter < ghSensorControl[chSensorCounter].chSensorSampleAvgTotalCount)

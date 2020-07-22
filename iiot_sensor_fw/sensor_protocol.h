@@ -74,7 +74,7 @@ Test Results:
 	#define DOWNLINK_BM							0xC0	//Down link channel select bit mask
 	#define MIN_SAMPLE_AVG_COUNT				1		//Minimum samples for the average
 
-	//Indexes for Master Controller related fields in Tasking Table
+	//Indexes for Master Controller related fields in Execution Table
 	#define PACKET_LENGTH_INDEX					2		//Packet length index
 	#define PACKET_MASTER_ID_INDEX				5		//Master controller TT id position
 	#define PACKET_SAMPLE_CLOCK_FREQ_BYTE1		7		//Master controller sample clock frequency MSB position
@@ -84,17 +84,17 @@ Test Results:
 	#define PACKET_WAIT_TIME_BYTE1				11		//Response wait time MSB position
 	#define PACKET_WAIT_TIME_BYTE2				12		//Response wait time LSB position
 
-	//Indexes for Sensor related fields in Tasking Table
+	//Indexes for Sensor related fields in Execution Table
 	#define SENSOR_ENTRY_OFFSET					6		//Gap between two sensor TT entry
-	#define SENSORS_START_INDEX					13		//First Sensor entry in the Tasking Table
-	#define SENSOR_TASKING_TABLE_ID_OFFSET		0		//Sensor ID position from the current value of index counter
+	#define SENSORS_START_INDEX					13		//First Sensor entry in the Execution Table
+	#define SENSOR_EXECUTION_TABLE_ID_OFFSET		0		//Sensor ID position from the current value of index counter
 	#define SENSOR_CONTROL_BYTE_OFFSET			2		//Sensor control byte position
 	#define SAMPLE_CLOCK_DIVISOR_OFFSET			3		//Sensor sample clock divisor byte position
 	#define SAMPLES_IN_AVERAGE_OFFSET			4		//Sensor sample in average position
 	#define RADIO_CLOCK_DIVISOR_OFFSET			5		//Sensor's radio clock divisor
 
-	//macros used in fnData_TT_Request_Task function
-	#define TT_REQ_PACKET_LENGTH				4
+	//macros used in fnData_ET_Request_Task function
+	#define ET_REQ_PACKET_LENGTH				4
 	#define BASE_INDEX							0
 
 	//________E N U M E R A T I O N S __________________________________________________________________
@@ -108,8 +108,8 @@ Test Results:
 		RADIO_TX_MODE,								//Radio transmit mode
 		TX_TIME_OUT_MODE,							//transmission time out mode
 		RADIO_RX_MODE,								//radio receive mode
-		RADIO_TT_REPLY_MODE,						//send ACK/NACK mode
-		RADIO_TT_REPLY_TIME_OUT_MODE,				//ACK/NACK send time out
+		RADIO_ET_REPLY_MODE,						//send ACK/NACK mode
+		RADIO_ET_REPLY_TIME_OUT_MODE,				//ACK/NACK send time out
 		RADIO_SENSOR_LOOP_BACK_MODE,					//SENSOR loop back mode
 		RADIO_SENSOR_LOOP_BACK_RESPONSE_MODE			//SENSOR loop back response wait mode
 	}Radio_Handler_Step_Enum_t;

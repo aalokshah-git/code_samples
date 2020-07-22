@@ -76,9 +76,9 @@ Test Results:
 	#define MAX_SAMPLE_AVERAGE_SUPPORTED			50				//The maximum samples supported for performing the averaging operations
 
 	//Default TT definitions
-	#define DEFAULT_TT_SAMPLE_CLOCK					1				//Default Master Sample Clock Value
-	#define DEFAULT_TT_RADIO_CLOCK					10				//Default Master Radio Clock Divisor Value
-	#define DEFAULT_TT_COMM_WAIT_TIME				1000			//Default Tasking Table wait time
+	#define DEFAULT_ET_SAMPLE_CLOCK					1				//Default Master Sample Clock Value
+	#define DEFAULT_ET_RADIO_CLOCK					10				//Default Master Radio Clock Divisor Value
+	#define DEFAULT_ET_COMM_WAIT_TIME				1000			//Default Execution Table wait time
 
 	//Radio Channel Identity
 	#define	RADIO_CH_UPLINK_CC1125					0x01				//CC1125 Uplink channel

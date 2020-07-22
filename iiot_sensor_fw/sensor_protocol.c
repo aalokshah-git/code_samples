@@ -7,10 +7,10 @@ Date Created: 11/12/2014
 Purpose: To manages all the required mechanism to maintain the reliable communication over RF for Data Download and TT Request Task.
 
 Functions:
-fnData_TT_Request_Task			Tasking Table Request task (It will execute when SENSOR in IDLE mode)
+fnData_ET_Request_Task			Execution Table Request task (It will execute when SENSOR in IDLE mode)
 fnRadioTxRxHandler				It includes all the required scenarios to manage the communication over RF
 fnData_Download_Task			Data Download Task (It will execute when SENSOR in Data mode)
-fnTT_Upload_Task				It verifies the received tasking table and initialize the allocated memory resources for the same
+fnET_Upload_Task				It verifies the received tasking table and initialize the allocated memory resources for the same
 
 Interrupts:
 -NA-
@@ -96,21 +96,21 @@ volatile uint16_t					gnDefaultCommWaitTimeValue;
 //Variable used to indicate the reply type - ACK/NACK after receiving the data from RFC
 uint8_t								gchAckReplyType;
 
-//____fnTT_Upload_Task _________________________________________________________________
+//____fnET_Upload_Task _________________________________________________________________
 //
 // @brief	Function fill up the memory resources assigned to hold the tasking table details of master controller as well as individual sensors. 
 //			It validates received tasking table for its value and execute accordingly for the data collection processes.
 //			The functionality of this task can be explained as below:
 //				Whenever the new TT is available all the shared resources are released and sample clock is disabled to avoid the conflict. 
 //				It will also perform boundary checks for all the received data bytes for sample clock, radio clock divisor, comm wait time, etc.. 
-//				If any mismatch will get found in the checking than this function will return and task manager of SENSOR MC firmware start executing Tasking Table request task with default tasking table.
+//				If any mismatch will get found in the checking than this function will return and task manager of SENSOR MC firmware start executing Execution Table request task with default tasking table.
 //				If all the fields are within boundary than data structures will get filled with the new tasking table data and task manager will start executing as per requirement.
 //				In the case of mismatch it will also raise the overrun errors indicating for the same.
 //				After successfully loading the Master Controller this function will load all the sensor's individual tasking table in the same way.
 // @param	pchSensorRxBuff	Pointer to memory resources used to hold the received data over RF
 // @return	FALSE if boundary mismatch in any of the parameter will get found in received data otherwise returns TRUE
 
-inline int8_t fnTT_Upload_Task(uint8_t *pchSensorRxBuff)
+inline int8_t fnET_Upload_Task(uint8_t *pchSensorRxBuff)
 {
 	uint8_t chSensorCounter;
 	
@@ -194,7 +194,7 @@ inline int8_t fnTT_Upload_Task(uint8_t *pchSensorRxBuff)
 			continue;
 		}
 		
-		ghSensorControl[gchTotalSensorEntry].chSensorID					= pchSensorRxBuff[chSensorCounter + SENSOR_TASKING_TABLE_ID_OFFSET];			//sensor id
+		ghSensorControl[gchTotalSensorEntry].chSensorID					= pchSensorRxBuff[chSensorCounter + SENSOR_EXECUTION_TABLE_ID_OFFSET];			//sensor id
 		ghSensorControl[gchTotalSensorEntry].chSensorCtrlByte 			= pchSensorRxBuff[chSensorCounter + SENSOR_CONTROL_BYTE_OFFSET];				//sensor control byte
 		ghSensorControl[gchTotalSensorEntry].chSampleClockDivisor 		= pchSensorRxBuff[chSensorCounter + SAMPLE_CLOCK_DIVISOR_OFFSET];				//sample clock divisor
 		ghSensorControl[gchTotalSensorEntry].chRadioClockDivisor 		= pchSensorRxBuff[chSensorCounter + RADIO_CLOCK_DIVISOR_OFFSET];				//radio clock divisor
@@ -482,18 +482,18 @@ inline int8_t fnRadioTxRxHandler(void)
 								case TERMINATE_DATA_DOWNLOAD:
 							
 									SEND_DEBUG_STRING("Request for Terminating Data Download\n");
-									fnDefaultTaskingTableInit();
+									fnDefaultExecutionTableInit();
 									return RETURN_TRUE;					//Terminate the operation
 								break;
 							
-								//Tasking table upload
-								case NEW_TASKING_TABLE_PACKET:
+								//Execution table upload
+								case NEW_EXECUTION_TABLE_PACKET:
 							
 									//Implement it for multi packet scenarios - ????????????
-									SEND_DEBUG_STRING("New Tasking Table Query Received\n");
+									SEND_DEBUG_STRING("New Execution Table Query Received\n");
 							
 									//Fill up the memory resources assigned for master controller and sensor operations with the received buff
-									if(RETURN_TRUE==fnTT_Upload_Task(chSensorRxBuff))	//passing address of SENSOR receive buffer
+									if(RETURN_TRUE==fnET_Upload_Task(chSensorRxBuff))	//passing address of SENSOR receive buffer
 									{
 										//Send ACK if uploaded data are fine
 										gchAckReplyType= SET_FLAG;
@@ -504,15 +504,15 @@ inline int8_t fnRadioTxRxHandler(void)
 										gchAckReplyType= RESET_FLAG;
 									}
 							
-									gchRadioCommStepMode=RADIO_TT_REPLY_MODE;
+									gchRadioCommStepMode=RADIO_ET_REPLY_MODE;
 									chNextPacket = SET_FLAG;
 								break;
 							
-								//No Tasking Table available to execute
-								case NO_NEW_TT_AVAILABLE:
+								//No Execution Table available to execute
+								case NO_NEW_ET_AVAILABLE:
 							
 									//New tasking table is not available so keep doing the TT request query at periodic wake up
-									SEND_DEBUG_STRING("Tasking Table is not Available\n");
+									SEND_DEBUG_STRING("Execution Table is not Available\n");
 									return RETURN_TRUE;			//Terminate the operation
 								break;
 							
@@ -524,7 +524,7 @@ inline int8_t fnRadioTxRxHandler(void)
 									fnDisableWDT();
 									gchSensorLoopBack = LB_STEP_1;				//flag to indicate SENSOR loop back is on
 									gchAckReplyType	= SET_FLAG;					//Reply ACK on getting START loop back command
-									gchRadioCommStepMode = RADIO_TT_REPLY_MODE;
+									gchRadioCommStepMode = RADIO_ET_REPLY_MODE;
 								break;
 							
 								default:
@@ -546,7 +546,7 @@ inline int8_t fnRadioTxRxHandler(void)
 						{
 							SEND_DEBUG_STRING("Stopping Loopback Mode: Timeout Condittion\n");
 							gchSensorLoopBack = LB_STEP_0;
-							fnDefaultTaskingTableInit();
+							fnDefaultExecutionTableInit();
 							fnEnableWDT();
 							return RETURN_TRUE;
 						}
@@ -597,10 +597,10 @@ inline int8_t fnRadioTxRxHandler(void)
 				{
 					gchSensorLoopBack = LB_STEP_2;
 					fnEnableWDT();
-					fnDefaultTaskingTableInit();
+					fnDefaultExecutionTableInit();
 					SEND_DEBUG_STRING("Stop Loop Back with IDLE TT\n");
 					gchAckReplyType	= SET_FLAG;											//Reply ACK on getting STOP loop back command
-					gchRadioCommStepMode = RADIO_TT_REPLY_MODE;
+					gchRadioCommStepMode = RADIO_ET_REPLY_MODE;
 				}
 			
 				//If start active tasking table command received
@@ -609,7 +609,7 @@ inline int8_t fnRadioTxRxHandler(void)
 					gchSensorLoopBack = LB_STEP_2;
 					fnEnableWDT();
 					gchAckReplyType	= SET_FLAG;											//Reply ACK on getting STOP loop back command
-					gchRadioCommStepMode = RADIO_TT_REPLY_MODE;
+					gchRadioCommStepMode = RADIO_ET_REPLY_MODE;
 					SEND_DEBUG_STRING("Stop Loopback with Active TT\n");
 				}
 			
@@ -623,8 +623,8 @@ inline int8_t fnRadioTxRxHandler(void)
 				}
 			break;
 			
-			//Send ACK/NACK for the received Tasking Table upload query
-			case RADIO_TT_REPLY_MODE:
+			//Send ACK/NACK for the received Execution Table upload query
+			case RADIO_ET_REPLY_MODE:
 			
 				//Put Radio in IDLE mode before performing the send operation
 				fnCC112xSendReceiveHandler(RADIO_COMMAND_STROBE,CC112X_SIDLE,1,NULL);
@@ -638,11 +638,11 @@ inline int8_t fnRadioTxRxHandler(void)
 				//Check for Reply Type
 				if(gchAckReplyType==SET_FLAG)
 				{
-					gchSensorCommBuff[BASE_INDEX][PACKET_HEADER_INDEX]=ACK_RECEIPT_OF_LAST_TT_PACKET;
+					gchSensorCommBuff[BASE_INDEX][PACKET_HEADER_INDEX]=ACK_RECEIPT_OF_LAST_ET_PACKET;
 				}
 				else
 				{
-					gchSensorCommBuff[BASE_INDEX][PACKET_HEADER_INDEX]=NACK_RECEIPT_OF_LAST_TT_PACKET;
+					gchSensorCommBuff[BASE_INDEX][PACKET_HEADER_INDEX]=NACK_RECEIPT_OF_LAST_ET_PACKET;
 				}
 			
 				//Query consist of packet header of 4 bytes
@@ -672,12 +672,12 @@ inline int8_t fnRadioTxRxHandler(void)
 				
 					//Start communication wait timer for transmit operation
 					fnStartCommunicationTimer(CC1125_TX_COMPLETE_TIMEOUT_WAIT);
-					gchRadioCommStepMode=RADIO_TT_REPLY_TIME_OUT_MODE;
+					gchRadioCommStepMode=RADIO_ET_REPLY_TIME_OUT_MODE;
 				}
 			break;
 
 			//Time out for transmit operation of Radio chip
-			case RADIO_TT_REPLY_TIME_OUT_MODE:
+			case RADIO_ET_REPLY_TIME_OUT_MODE:
 			
 				//Check for the interrupt from CC1125 indicating data transmission complete
 				if(RESET_VALUE == fnCC112xSendDataComplete())
@@ -700,13 +700,13 @@ inline int8_t fnRadioTxRxHandler(void)
 						default:
 							if(gchAckReplyType==SET_FLAG)
 							{
-								gchTasks_Enable &= (~TASKING_TABLE_REQ_TASK);
+								gchTasks_Enable &= (~EXECUTION_TABLE_REQ_TASK);
 								gchTasks_Active = DISABLE_ALL_TASKS;
 								gchTasks_Enable |= DATA_SAMPLING_TASK | DATA_COLLECTION_TASK | DATA_DOWNLOAD_TASK;
 							}
 							else
 							{
-								fnDefaultTaskingTableInit();
+								fnDefaultExecutionTableInit();
 							}
 							return RETURN_TRUE;
 						break;
@@ -789,13 +789,13 @@ int8_t fnData_Download_Task(void)
 	return RETURN_FALSE;				//Task is running
 }
 
-//____fnData_TT_Request_Task _________________________________________________________________
+//____fnData_ET_Request_Task _________________________________________________________________
 //
 // @brief	Function is called from the task manager itself when it wants to request for the new tasking table to RFC Console.
 //			The packet for the same is created first and than fnRadioTxRxHandler handles the rest of the communication steps.
 // @return	TRUE if all the steps required to perform TT Request operations in fnRadioTxRxHandler completed successfully
 
-int8_t fnData_TT_Request_Task(void)
+int8_t fnData_ET_Request_Task(void)
 {
 	//First initial step for the tasking table request operation
 	if(gchRadioCommStepMode == COMM_ENTRY_POINT)
@@ -808,9 +808,9 @@ int8_t fnData_TT_Request_Task(void)
 		ghSensorCommManager.hPacketDescriptor.chLastPacket	= SET_FLAG;		//Last packet indicator
 		ghSensorCommManager.hPacketDescriptor.chTransmitterID	= RADIO_CH_SLOW_DOWNLINK_CC1125;	//communication link
 		
-		gchSensorCommBuff[BASE_INDEX][PACKET_HEADER_INDEX]		= REQUEST_NEW_TASKING_TABLE;		//0x81
-		gchSensorCommBuff[BASE_INDEX][PACKET_DATA_LENGTH_INDEX]	= TT_REQ_PACKET_LENGTH;
-		gchSensorCommBuff[BASE_INDEX][CC1125_DATA_PACKET_LENGTH]	= TT_REQ_PACKET_LENGTH;
+		gchSensorCommBuff[BASE_INDEX][PACKET_HEADER_INDEX]		= REQUEST_NEW_EXECUTION_TABLE;		//0x81
+		gchSensorCommBuff[BASE_INDEX][PACKET_DATA_LENGTH_INDEX]	= ET_REQ_PACKET_LENGTH;
+		gchSensorCommBuff[BASE_INDEX][CC1125_DATA_PACKET_LENGTH]	= ET_REQ_PACKET_LENGTH;
 		gchSensorCommBuff[BASE_INDEX][PACKET_DESCRIPTOR_INDEX]	= ghSensorCommManager.hPacketDescriptor.chPacketDescriptor;
 		
 		gchRadioCommStepMode=RADIO_PWR_CHECK_MODE;

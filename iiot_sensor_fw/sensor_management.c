@@ -21,7 +21,7 @@ fnE2PROMReadOpeartion						Perform sequential read with E2PROM
 fnSetResetSmartSensorSelectlines			Set environments for specific smart sensor operation
 fnStartSmartSensorSampling					Notify smart sensor to start sampling 
 fnSmartSensorsDataCollection				Fetch smart sensor measurements
-fnSidewall_Serial_Task						---- Not Implemented ---
+fnDebug_Serial_Task						---- Not Implemented ---
 fnWatch_Dog_Manage_Task						---- Not Implemented ---
 
 Interrupts:
@@ -654,15 +654,15 @@ int8_t fnStartSmartSensorSampling(uint8_t chSensorGroup,uint8_t chSensorValue)
 	{
 		if(chSensorGroup==SMART_SENSOR_SPID_GROUP)
 		{
-			//Upload sampling related Sensor Tasking Table
+			//Upload sampling related Sensor Execution Table
 		}
 		else if(chSensorGroup==SMART_SENSOR_SPIE_GROUP)
 		{
-			//Upload sampling related Sensor Tasking Table
+			//Upload sampling related Sensor Execution Table
 		}
 		else if(chSensorGroup==SMART_SENSOR_SPIF_GROUP)
 		{
-			//Upload sampling related Sensor Tasking Table
+			//Upload sampling related Sensor Execution Table
 		}
 		
 		return RETURN_TRUE;
@@ -719,11 +719,11 @@ int8_t fnSmartSensorsDataCollection(uint8_t chSensorGroup,uint8_t chSensorValue,
 	return RETURN_FALSE;
 }
 
-//_____ fnSidewall_Serial_Task ____________________________________________________________________
+//_____ fnDebug_Serial_Task ____________________________________________________________________
 //
 //	?????Implementation pending
 
-int8_t fnSidewall_Serial_Task(void)
+int8_t fnDebug_Serial_Task(void)
 {
 	SEND_DEBUG_STRING("Serial Task");
 	return RETURN_TRUE;

@@ -120,9 +120,9 @@ Test Results:
 	
 	void fnResetFirmwareResourceAllocations(void);
 	
-	//_____ fnSidewall_Serial_Task ____________________________________________________________________
+	//_____ fnDebug_Serial_Task ____________________________________________________________________
 	//
-	int8_t fnSidewall_Serial_Task(void);
+	int8_t fnDebug_Serial_Task(void);
 
 	//_____ fnWatch_Dog_Manage_Task ____________________________________________________________________
 	//
@@ -149,7 +149,7 @@ Test Results:
 	//
 	// @brief	This is the main initialization task. It is responsible for initializing the SENSOR MMC firmware and hardware for operations.
 	//			It initializes the hardware by calling fnHardwareInit() function.
-	//			It initializes the firmware by calling fnSoftwareInit() and fnDefaultTaskingTableInit() functions.
+	//			It initializes the firmware by calling fnSoftwareInit() and fnDefaultExecutionTableInit() functions.
 	
 	void fnSystemInitTask(void);
 
@@ -167,18 +167,18 @@ Test Results:
 	
 	int8_t fnPowerSourceManager(uint8_t chOperation,uint8_t chSourceIdentity);
 	
-	//____fnDefaultTaskingTableInit _________________________________________________________________
+	//____fnDefaultExecutionTableInit _________________________________________________________________
 	//
 	// @brief	This function can be considered as a part of Firmware Initialization function
-	//			It initializes the default Tasking Table with which SENSOR MC has to operate
+	//			It initializes the default Execution Table with which SENSOR MC has to operate
 	//			Following settings are considered for default tasking table:
 	//				Sample Clock: 1HZ
 	//				Radio Clock Divisor: 5
 	//				Comm Wait tTime: 500mz
 	//				Active Tasks: TT Request Task
-	//				No Sensor Tasking Table is available at startup
+	//				No Sensor Execution Table is available at startup
 	
-	void fnDefaultTaskingTableInit(void);
+	void fnDefaultExecutionTableInit(void);
 	
 	//____fnData_Download_Task _________________________________________________________________
 	//
@@ -189,12 +189,12 @@ Test Results:
 
 	int8_t fnData_Download_Task(void);
 
-	//____fnData_TT_Request_Task _________________________________________________________________
+	//____fnData_ET_Request_Task _________________________________________________________________
 	//
 	// @brief	Function is called from the task manager itself when it wants to request for the new tasking table to RFC Console.
 	//			The packet for the same is created first and than fnRadioTxRxHandler handles the rest of the communication steps.
 	// @return	TRUE if all the steps required to perform TT Request operations in fnRadioTxRxHandler completed successfully
 
-	int8_t fnData_TT_Request_Task(void);
+	int8_t fnData_ET_Request_Task(void);
 		
 #endif /* TASK_MANAGER_H_ */

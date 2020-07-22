@@ -196,19 +196,19 @@ inline void fnSystem_Timing_Task(void)
 			}
 		break;
 		
-		//Phase-1: Tasking Table Request Task
+		//Phase-1: Execution Table Request Task
 		case RTC_PHASE1:
 			DISABLE_SAMPLING_CLOCK;
 			MC_HEARTBEAT_LED_ON;
 					
-			if(gchTasks_Enable & TASKING_TABLE_REQ_TASK)
+			if(gchTasks_Enable & EXECUTION_TABLE_REQ_TASK)
 			{
 				if(++ghMasterTaskTable.nRadioClockCounter >= ghMasterTaskTable.nRadioClockDivisor)		//Value must be >1 for nRadioClockDivisor
 				{
 					ghMasterTaskTable.nRadioClockCounter=RESET_COUNTER;			//Counter value zero when data collection task will get active so use it in checking of data download task
 				
 					//Enable tasking table request task for execution
-					gchTasks_Active |= TASKING_TABLE_REQ_TASK;					//Activate the task
+					gchTasks_Active |= EXECUTION_TABLE_REQ_TASK;					//Activate the task
 				}
 			}
 		break;

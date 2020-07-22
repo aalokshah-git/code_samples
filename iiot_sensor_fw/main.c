@@ -63,23 +63,20 @@ Some of the major points are listed below which help to understand this firmware
 			2> Data Collection Task:
 				The main purpose of this task is to keep packets ready which needs to send over RF.
 				For brief details and implementation of this task follow sample_collection.c.
-			3>	TT Request Task:
-				It will execute periodically when SENSOR MC does not have tasking table. It will query the RFC side in a predefined packet format for requesting the tasking table.
+			3> Data Download Task:
+				It manages all the communication with the Remote side over RF by following predefined packet format.
 				For brief details and implementation of this task follow sensor_protocol.c.
-			4>	Data Download Task:
-				It manages all the communication with the RFC over RF by following predefined packet format.
-				For brief details and implementation of this task follow sensor_protocol.c.
-			5> Serial Sidewall Task:
+			5> Serial Debug Task:
 				---- Not IMplemented ---
 			6> Battery Management Task:
 				---- Not IMplemented ---
 
-	Tasking Table:
+	Execution Table:
 		it can be referred as control settings. It manages entire data collection and download process on the basis of timing stamps.
 		For brief details regarding available fields in tasking table follow data_structure.h.
 	
 	Timing Management:
-		RTC is used to achieve all the timing constraints in SENSOR MC design. It is configured for periodic interruption with the sample clock value provided in tasking table.
+		RTC is used to achieve all the timing constraints in SENSOR MC design. It is configured for periodic interruption with the sample clock value provided in execution table.
 		On every interrupt it will notify one or another task to perform their execution so it can be considered as base for all the task.
 		In firmware this unit is implemented under the name of System Timing task in system_timing.c.
 	
@@ -185,23 +182,23 @@ int main()
 				}
 			}
 			
-			// Tasking Table Request Task
-			if (gchTasks_Active & TASKING_TABLE_REQ_TASK)
+			// Execution Table Request Task
+			if (gchTasks_Active & EXECUTION_TABLE_REQ_TASK)
 			{
 				//If task is executing and returns TRUE it means task is done with the operations otherwise it is blocking (waiting for something)
-				if (RETURN_TRUE == fnData_TT_Request_Task())
+				if (RETURN_TRUE == fnData_ET_Request_Task())
 				{
-					gchTasks_Active &= ~TASKING_TABLE_REQ_TASK;			//Set Done bit
+					gchTasks_Active &= ~EXECUTION_TABLE_REQ_TASK;			//Set Done bit
 				}
 			}
 
-			// Sidewall Serial Communication Task
-			if (gchTasks_Active & SIDEWALL_SERIAL_TASK)
+			// Debug Serial Communication Task
+			if (gchTasks_Active & DEBUG_SERIAL_TASK)
 			{
 				//If task is executing and returns TRUE it means task is done with the operations otherwise it is blocking (waiting for something)
-				if (RETURN_TRUE == fnSidewall_Serial_Task())
+				if (RETURN_TRUE == fnDebug_Serial_Task())
 				{
-					gchTasks_Active &= ~SIDEWALL_SERIAL_TASK;			//Set Done bit
+					gchTasks_Active &= ~DEBUG_SERIAL_TASK;			//Set Done bit
 				}
 			}
 
